@@ -28,6 +28,20 @@ class CourseModules(models.Model):
     course = models.ForeignKey(Courses, on_delete=models.CASCADE)
 
 
+class FilesStorage(models.Model):
+    module = models.ForeignKey(CourseModules, on_delete=models.CASCADE)
+    file = models.FileField(upload_to="module/files")
+
+
+class ModuleProgressTracker(models.Model):
+    module = models.ForeignKey(Courses, on_delete=models.CASCADE)
+    student = models.ForeignKey(CourseModules, on_delete=models.CASCADE)
+    completed = models.BooleanField()
+
+
 class ProgressTracker(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
-    course = models.ForeignKey(Courses, on_delete=models.CASCADE)
+    course = models.ForeignKey(Student, on_delete=models.CASCADE)
+    progress = models.ManyToManyField(ModuleProgressTracker)
+
+
