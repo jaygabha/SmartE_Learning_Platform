@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Your App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navbar or header section -->
+    <nav>
+        <ul>
+            <li><a href="{% url 'SmartE_app:dashboard' %}">Dashboard</a></li>
+            <!-- Add more navigation links as needed -->
+            <li><a href="{% url 'SmartE_app:logout' %}">Logout</a></li> <!-- Add this line for logout -->
+        </ul>
+    </nav>
+
+    <!-- Content section -->
+    <div class="container">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <!-- Include your JavaScript files or frameworks -->
+    <script>
+        // Add your JavaScript code here
+    </script>
+</body>
+</html>

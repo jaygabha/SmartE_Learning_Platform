@@ -5,18 +5,21 @@ from django.contrib.auth.models import User
 
 class Membership(models.Model):
     membership_choices = [
-        ('1', 'Bronze'),
-        ('2', 'Silver'),
-        ('3', 'Gold'),
+        ('bronze', 'Bronze'),
+        ('silver', 'Silver'),
+        ('gold', 'Gold'),
     ]
     type = models.CharField(unique=True, choices=membership_choices, primary_key=True, max_length=20)
     price = models.PositiveIntegerField(default=100)
+
+    def __str__(self):
+        return self.type
+
 
 
 class Student(User):
     sid = models.BigIntegerField(primary_key=True, unique=True)
     membership = models.ForeignKey(Membership,  on_delete=models.DO_NOTHING)
-    expiry_date = models.DateTimeField()
 
 
 class Transaction(models.Model):
