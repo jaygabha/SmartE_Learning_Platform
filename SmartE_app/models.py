@@ -3,8 +3,25 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
+class Membership(models.Model):
+    membership_choices = [
+        ('1', 'Bronze'),
+        ('2', 'Silver'),
+        ('3', 'Gold'),
+    ]
+    type = models.CharField(unique=True, choices=membership_choices, primary_key=True)
+    price = models.PositiveIntegerField(default=100)
+
+
 class Student(User):
     sid = models.BigIntegerField(primary_key=True, unique=True)
+    membership = models.ForeignKey(Membership,  on_delete=models.DO_NOTHING)
+    expiry_date = models.DateTimeField()
+
+
+class Transaction(models.Model):
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    money = models.PositiveIntegerField()
 
 
 class Professor(User):
@@ -21,6 +38,7 @@ class Courses(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
     students = models.ManyToManyField(Student, related_name='students_to_course')
     professors = models.ManyToManyField(Professor)
+    membership_access_level = models.ForeignKey(Membership,  on_delete=models.DO_NOTHING)
 
 
 class CourseModules(models.Model):
@@ -37,11 +55,14 @@ class ModuleProgressTracker(models.Model):
     module = models.ForeignKey(Courses, on_delete=models.CASCADE)
     student = models.ForeignKey(CourseModules, on_delete=models.CASCADE)
     completed = models.BooleanField()
+    views = models.PositiveIntegerField(default=0)
 
 
 class ProgressTracker(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     course = models.ForeignKey(Student, on_delete=models.CASCADE)
     progress = models.ManyToManyField(ModuleProgressTracker)
-
-
+    # For the attendance we can keep a dictionary maintaining week numbers and attendance
+    attendance = models.JSONField(null=True)
+    # Same can be done for grades
+    grades = models.JSONField(null=True)
