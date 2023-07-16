@@ -9,7 +9,7 @@ class Membership(models.Model):
         ('2', 'Silver'),
         ('3', 'Gold'),
     ]
-    type = models.CharField(unique=True, choices=membership_choices, primary_key=True)
+    type = models.CharField(unique=True, choices=membership_choices, primary_key=True, max_length=20)
     price = models.PositiveIntegerField(default=100)
 
 
@@ -33,7 +33,7 @@ class Admin(User):
 
 
 class Courses(models.Model):
-    course_id = models.CharField(primary_key=True, unique=True)
+    course_id = models.CharField(primary_key=True, unique=True, max_length=20)
     name = models.CharField(unique=True, max_length=30)
     created_date = models.DateTimeField(auto_now_add=True)
     students = models.ManyToManyField(Student, related_name='students_to_course')
@@ -59,7 +59,6 @@ class ModuleProgressTracker(models.Model):
 
 
 class ProgressTracker(models.Model):
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)
     course = models.ForeignKey(Student, on_delete=models.CASCADE)
     progress = models.ManyToManyField(ModuleProgressTracker)
     # For the attendance we can keep a dictionary maintaining week numbers and attendance
