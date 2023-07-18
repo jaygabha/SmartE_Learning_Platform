@@ -43,6 +43,9 @@ class Courses(models.Model):
     professors = models.ManyToManyField(Professor)
     membership_access_level = models.ForeignKey(Membership,  on_delete=models.DO_NOTHING)
 
+    def __str__(self):
+        return self.course_id
+
 
 class CourseModules(models.Model):
     module_name = models.CharField(max_length=30)
