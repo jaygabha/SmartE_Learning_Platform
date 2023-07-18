@@ -1,0 +1,11 @@
+{% extends 'SmartE_app/base.html' %}
+
+{% block content %}
+  <h2>Chapter: {{ chapter.module_name }}</h2>
+  {% if chapter.content %}
+    <p>{{ chapter.content }}</p>
+  {% else %}
+    <p>No content available.</p>
+  {% endif %}
+  <!-- You can add more information or formatting here as needed -->
+{% endblock %}

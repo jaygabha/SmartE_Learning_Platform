@@ -1,0 +1,36 @@
+{% extends 'SmartE_app/base.html' %}
+
+{% block content %}
+  <h2>Course Details</h2>
+  <p>Course ID: {{ course.course_id }}</p>
+  <p>Name: {{ course.name }}</p>
+  <p>Membership Access Level: {{ course.membership_access_level }}</p>
+
+  <!-- Add other course details as needed -->
+
+  <h2>Add a New Chapter</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ chapter_form.as_p }}
+    <button type="submit">Add Chapter</button>
+  </form>
+
+  <h2>Add Content to Chapter</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ content_form.as_p }}
+    <button type="submit">Add Content</button>
+  </form>
+
+  <!-- Display existing chapters and their content -->
+  <h2>Chapters</h2>
+  <ul>
+    {% for chapter in course.coursemodules_set.all %}
+      <li>
+        <a href="{% url 'SmartE_app:module_detail' course_id=course.course_id module_id=chapter.id %}">
+          {{ chapter.module_name }}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}

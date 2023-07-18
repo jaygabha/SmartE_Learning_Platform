@@ -10,7 +10,11 @@
     <label for="username">Username:</label>
     <input type="text" id="username" name="username">
     <label for="password">Password:</label>
-    <input type="password" id="password" name="password">
+    <input type="password" id="password" name="password"><label for="user_type">Select User Type:</label>
+    <select id="user_type" name="user_type">
+      <option value="Student">Student</option>
+      <option value="Professor">Professor</option>
+    </select>
     <input type="submit" value="Login">
   </form>
 {% endblock %}
