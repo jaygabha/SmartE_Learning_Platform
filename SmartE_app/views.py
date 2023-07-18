@@ -1,5 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.core.files.storage import FileSystemStorage
+from django.http import FileResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 
@@ -26,8 +28,10 @@ def login_view(request):
                     return redirect('SmartE_app:student_dashboard')  # Redirect to student dashboard
                 elif user_type == 'Professor':
                     login(request, user)
-                    return redirect('SmartE_app:course_dashboard')  # Redirect to teacher dashboard
-
+                    if user.groups.filter(name='Professor').exists():
+                        return redirect('SmartE_app:course_dashboard')  # Redirect to teacher dashboard
+                    else:
+                        return render(request, 'SmartE_app/login.html', {'form': form, 'error_message': 'Invalid User'})
     else:
         form = LoginForm()
 
@@ -116,12 +120,20 @@ def course_detail(request, course_id):
     course = get_object_or_404(Courses, course_id=course_id)
 
     if request.method == 'POST':
-        chapter_form = AddChapterForm(request.POST)
+        chapter_form = AddChapterForm(request.POST, request.FILES)  # Include request.FILES for file uploads
         content_form = AddContentForm(request.POST)
 
         if chapter_form.is_valid() and content_form.is_valid():
             chapter = chapter_form.save(commit=False)
             chapter.course = course
+
+            # Handle file upload
+            if 'files' in request.FILES:
+                file = request.FILES['files']
+                fs = FileSystemStorage()
+                filename = fs.save(file.name, file)
+                chapter.files = fs.url(filename)
+
             chapter.save()
 
             # Associate content with the chapter

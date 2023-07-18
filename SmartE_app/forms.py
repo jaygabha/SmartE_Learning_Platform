@@ -30,7 +30,7 @@ class AddCourseForm(forms.ModelForm):
 class AddChapterForm(forms.ModelForm):
     class Meta:
         model = CourseModules
-        fields = ['module_name']
+        fields = ['module_name', 'files']
 
 class AddContentForm(forms.ModelForm):
     class Meta:

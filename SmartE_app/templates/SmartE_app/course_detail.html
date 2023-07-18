@@ -8,14 +8,14 @@
 
   <!-- Add other course details as needed -->
 
-  <h2>Add a New Chapter</h2>
-  <form method="post">
+  <h2>Add a New Module</h2>
+  <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ chapter_form.as_p }}
     <button type="submit">Add Chapter</button>
   </form>
 
-  <h2>Add Content to Chapter</h2>
+  <h2>Add Content to Module</h2>
   <form method="post">
     {% csrf_token %}
     {{ content_form.as_p }}
@@ -23,7 +23,7 @@
   </form>
 
   <!-- Display existing chapters and their content -->
-  <h2>Chapters</h2>
+  <h2>Modules</h2>
   <ul>
     {% for chapter in course.coursemodules_set.all %}
       <li>

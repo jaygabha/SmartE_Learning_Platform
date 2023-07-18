@@ -51,6 +51,7 @@ class CourseModules(models.Model):
     module_name = models.CharField(max_length=30)
     course = models.ForeignKey(Courses, on_delete=models.CASCADE)
     content = models.TextField(default='')
+    files = models.FileField(upload_to='course_files/', blank=True, null=True)
 
     def __str__(self):
         return self.module_name
