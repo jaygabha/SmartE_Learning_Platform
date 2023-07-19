@@ -25,7 +25,7 @@ def login_view(request):
             if user is not None:
                 if user_type == 'Student':
                     login(request, user)
-                    return redirect('SmartE_app:student_dashboard')  # Redirect to student dashboard
+                    return redirect('SmartE_app:course_list')  # Redirect to student dashboard
                 elif user_type == 'Professor':
                     login(request, user)
                     if user.groups.filter(name='Professor').exists():
@@ -204,3 +204,16 @@ def module_detail(request, course_id, module_id):
         'chapter': chapter,
     }
     return render(request, 'SmartE_app/module_detail.html', context)
+
+@login_required()
+def course_list(request):
+
+    #student = Student.objects.filter(sid=request.user.sid).first()
+    #print(student.sid)
+    #print(Student.objects.filter(sid__in=User.objects.filter(username=request.user.username)))
+    courses = Courses.objects.all()
+    return render(request, 'SmartE_app/course_list.html', {'courses': courses})
+
+def course_detail_student(request, course_id):
+    course = CourseModules.objects.filter(course=course_id)
+    return render(request, 'SmartE_app/course_detail_student.html', {'course': course, 'course_id': course_id})

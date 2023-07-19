@@ -1,0 +1,19 @@
+<!-- course_detail_student.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Course Detail</title>
+</head>
+<body>
+    <h1>{{ course.name }}</h1>
+    <h2>Modules</h2>
+    <ul>
+        {% for module in course.all %}
+            <a href="{% url 'SmartE_app:module_detail' course_id=course_id module_id=module.id %}">
+          {{ module.module_name }}
+        </a>
+        {% endfor %}
+    </ul>
+</body>
+</html>
