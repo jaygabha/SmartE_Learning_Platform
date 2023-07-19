@@ -1,6 +1,6 @@
 from django import forms
 from .models import Membership, Courses, FilesStorage, CourseModules
-
+from creditcards.forms import CardNumberField, CardExpiryField, SecurityCodeField
 
 class LoginForm(forms.Form):
     username = forms.CharField(max_length=100)
@@ -18,9 +18,9 @@ class RegistrationForm(forms.Form):
 class PaymentForm(forms.Form):
     membership_type = forms.ModelChoiceField(queryset=Membership.objects.all())
     name = forms.CharField(max_length=100)
-    cardnumber = forms.CharField(max_length=16)
-    expiry = forms.CharField(max_length=5)
-    cvv = forms.CharField(max_length=4)
+    cardnumber = CardNumberField(label='Card Number')
+    expiry = CardExpiryField(label='Expiration Date')
+    cvv = SecurityCodeField(label='CVV/CVC')
 
 class AddCourseForm(forms.ModelForm):
     class Meta:
