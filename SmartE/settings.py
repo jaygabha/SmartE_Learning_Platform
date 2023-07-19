@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'SmartE_app.apps.SmarteAppConfig',
+    'bootstrap5',
 ]
 
 MIDDLEWARE = [
