@@ -1,0 +1,7 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'SmartE_app/payment.css' %}">
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Pay</button>
+</form>
