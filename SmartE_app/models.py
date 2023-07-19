@@ -20,6 +20,8 @@ class Membership(models.Model):
 class Student(User):
     sid = models.BigIntegerField(primary_key=True, unique=True)
     membership = models.ForeignKey(Membership,  on_delete=models.DO_NOTHING)
+    class Meta:
+        verbose_name = "Student"
 
 
 class Transaction(models.Model):
@@ -29,6 +31,8 @@ class Transaction(models.Model):
 
 class Professor(User):
     pid = models.BigIntegerField(primary_key=True, unique=True)
+    class Meta:
+        verbose_name = "Professor"
 
 
 class Admin(User):
