@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.files.storage import FileSystemStorage
-from django.http import FileResponse
+from django.http import FileResponse, HttpResponseForbidden
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 
@@ -9,6 +9,23 @@ from .forms import RegistrationForm, PaymentForm, LoginForm, AddCourseForm, AddC
 from django.contrib.auth.models import User
 
 from .models import Membership, Student, Courses, Professor, FilesStorage, CourseModules
+
+
+def professor_required(view_func):
+    def _wrapped_view(request, *args, **kwargs):
+        if not request.user.is_authenticated or not request.user.groups.filter(name='Professor').exists():
+            return HttpResponseForbidden("You don't have permission to access this page.")
+        return view_func(request, *args, **kwargs)
+    return _wrapped_view
+
+
+def student_required(view_func):
+    def _wrapped_view(request, *args, **kwargs):
+        print(request.user.groups.count())
+        if not request.user.is_authenticated or request.user.groups.count() != 0:
+            return HttpResponseForbidden("You don't have permission to access this page.")
+        return view_func(request, *args, **kwargs)
+    return _wrapped_view
 
 
 def login_view(request):
@@ -37,10 +54,6 @@ def login_view(request):
 
     return render(request, 'SmartE_app/login.html', {'form': form})
 
-
-@login_required
-def dashboard(request):
-    return render(request, 'SmartE_app/dashboard.html')
 
 def logout_view(request):
     logout(request)
@@ -92,12 +105,7 @@ def payment(request):
 
     return render(request, 'SmartE_app/payment.html', {'form': form})
 
-@login_required  # This decorator ensures that only authenticated users can access the dashboards
-def student_dashboard(request):
-    # Add your logic here to retrieve and display student-related data
-    return render(request, 'SmartE_app/student_dashboard.html')
-
-@login_required
+@professor_required
 def professor_dashboard(request):
     if request.method == 'POST':
         form = AddCourseForm(request.POST)
@@ -116,6 +124,7 @@ def professor_dashboard(request):
     }
     return render(request, 'SmartE_app/professor_dashboard.html', context)
 
+@professor_required
 def course_detail(request, course_id):
     course = get_object_or_404(Courses, course_id=course_id)
 
@@ -158,6 +167,7 @@ def course_detail(request, course_id):
 
 # ...
 
+@professor_required
 def course_dashboard(request):
     courses = Courses.objects.all()
 
@@ -186,6 +196,7 @@ def course_dashboard(request):
     }
     return render(request, 'SmartE_app/course_dashboard.html', context)
 
+@professor_required
 def course_delete(request, course_id):
     course = get_object_or_404(Courses, course_id=course_id)
     if request.method == 'POST':
@@ -205,7 +216,7 @@ def module_detail(request, course_id, module_id):
     }
     return render(request, 'SmartE_app/module_detail.html', context)
 
-@login_required()
+@student_required
 def course_list(request):
 
     #student = Student.objects.filter(sid=request.user.sid).first()
@@ -214,6 +225,7 @@ def course_list(request):
     courses = Courses.objects.all()
     return render(request, 'SmartE_app/course_list.html', {'courses': courses})
 
+@student_required
 def course_detail_student(request, course_id):
     course = CourseModules.objects.filter(course=course_id)
     return render(request, 'SmartE_app/course_detail_student.html', {'course': course, 'course_id': course_id})
