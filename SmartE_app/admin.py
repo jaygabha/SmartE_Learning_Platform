@@ -1,5 +1,5 @@
 from django.contrib import admin
-from SmartE_app.models import Membership, Courses, CourseModules, Student, Professor
+from SmartE_app.models import Membership, Courses, CourseModules, Student, Professor, FilesStorage
 
 # Register your models here.
 class StudentAdmin(admin.ModelAdmin):
@@ -13,3 +13,4 @@ admin.site.register(Courses)
 admin.site.register(CourseModules)
 admin.site.register(Student, StudentAdmin)
 admin.site.register(Professor, ProfessorAdmin)
+admin.site.register(FilesStorage)

@@ -16,15 +16,16 @@ def professor_required(view_func):
         if not request.user.is_authenticated or not request.user.groups.filter(name='Professor').exists():
             return HttpResponseForbidden("You don't have permission to access this page.")
         return view_func(request, *args, **kwargs)
+
     return _wrapped_view
 
 
 def student_required(view_func):
     def _wrapped_view(request, *args, **kwargs):
-        print(request.user.groups.count())
         if not request.user.is_authenticated or request.user.groups.count() != 0:
             return HttpResponseForbidden("You don't have permission to access this page.")
         return view_func(request, *args, **kwargs)
+
     return _wrapped_view
 
 
@@ -59,6 +60,7 @@ def logout_view(request):
     logout(request)
     return redirect('SmartE_app:login')
 
+
 def registration(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
@@ -70,7 +72,8 @@ def registration(request):
             password = form.cleaned_data['password']
             membership_type = form.cleaned_data['membership_type']
 
-            user = User.objects.create_user(username=username, password=password)
+            user = Student.objects.create_user(username=username, password=password, sid=sid,
+                                               membership=membership_type)
             user.email = email
             user.first_name = name
             user.save()
@@ -80,6 +83,8 @@ def registration(request):
         form = RegistrationForm()
 
     return render(request, 'SmartE_app/registration.html', {'form': form})
+
+
 def payment(request):
     if request.method == 'POST':
         form = PaymentForm(request.POST)
@@ -105,6 +110,7 @@ def payment(request):
 
     return render(request, 'SmartE_app/payment.html', {'form': form})
 
+
 @professor_required
 def professor_dashboard(request):
     if request.method == 'POST':
@@ -124,6 +130,7 @@ def professor_dashboard(request):
     }
     return render(request, 'SmartE_app/professor_dashboard.html', context)
 
+
 @professor_required
 def course_detail(request, course_id):
     course = get_object_or_404(Courses, course_id=course_id)
@@ -137,7 +144,6 @@ def course_detail(request, course_id):
             chapter.save()
 
             # Associate content with the chapter
-
 
             # Save the chapter content first
             chapter.save()
@@ -158,6 +164,7 @@ def course_detail(request, course_id):
         'chapter_form': chapter_form,
     }
     return render(request, 'SmartE_app/course_detail.html', context)
+
 
 # views.py
 
@@ -192,6 +199,7 @@ def course_dashboard(request):
     }
     return render(request, 'SmartE_app/course_dashboard.html', context)
 
+
 @professor_required
 def course_delete(request, course_id):
     course = get_object_or_404(Courses, course_id=course_id)
@@ -212,14 +220,15 @@ def module_detail(request, course_id, module_id):
     }
     return render(request, 'SmartE_app/module_detail.html', context)
 
+
 @student_required
 def course_list(request):
-
-    #student = Student.objects.filter(sid=request.user.sid).first()
-    #print(student.sid)
-    #print(Student.objects.filter(sid__in=User.objects.filter(username=request.user.username)))
-    courses = Courses.objects.all()
+    student_user = Student.objects.get(username=request.user.username)
+    student_membership = student_user.membership
+    membership_type = student_membership.type
+    courses = Courses.objects.filter(membership_access_level=membership_type)
     return render(request, 'SmartE_app/course_list.html', {'courses': courses})
+
 
 @student_required
 def course_detail_student(request, course_id):
