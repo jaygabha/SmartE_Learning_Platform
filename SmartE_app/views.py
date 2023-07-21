@@ -129,37 +129,33 @@ def course_detail(request, course_id):
     course = get_object_or_404(Courses, course_id=course_id)
 
     if request.method == 'POST':
-        chapter_form = AddChapterForm(request.POST, request.FILES)  # Include request.FILES for file uploads
-        content_form = AddContentForm(request.POST)
+        chapter_form = AddChapterForm(request.POST, request.FILES)
 
-        if chapter_form.is_valid() and content_form.is_valid():
+        if chapter_form.is_valid():
             chapter = chapter_form.save(commit=False)
             chapter.course = course
-
-            # Handle file upload
-            if 'files' in request.FILES:
-                file = request.FILES['files']
-                fs = FileSystemStorage()
-                filename = fs.save(file.name, file)
-                chapter.files = fs.url(filename)
-
             chapter.save()
 
             # Associate content with the chapter
-            content = content_form.cleaned_data['content']
-            chapter.content = content
+
+
+            # Save the chapter content first
             chapter.save()
 
-            # Redirect to the course dashboard after adding the chapter and content
+            # Handle file upload manually and associate files with the chapter
+            files = request.FILES.getlist('files')
+            for file in files:
+                file_obj = FilesStorage(module=chapter, file=file)
+                file_obj.save()
+
             return redirect('SmartE_app:course_dashboard')
+
     else:
         chapter_form = AddChapterForm()
-        content_form = AddContentForm()
 
     context = {
         'course': course,
         'chapter_form': chapter_form,
-        'content_form': content_form,
     }
     return render(request, 'SmartE_app/course_detail.html', context)
 

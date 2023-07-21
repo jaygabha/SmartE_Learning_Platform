@@ -1,4 +1,7 @@
+from django.conf.urls.static import static
 from django.urls import path
+
+from SmartE import settings
 from . import views
 
 app_name = 'SmartE_app'
@@ -18,3 +21,5 @@ urlpatterns = [
     # Other URL patterns...
     # Add other URL patterns as needed
 ]
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

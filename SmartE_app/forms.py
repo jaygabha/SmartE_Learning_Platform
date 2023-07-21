@@ -1,6 +1,8 @@
 from django import forms
 from .models import Membership, Courses, FilesStorage, CourseModules
 from creditcards.forms import CardNumberField, CardExpiryField, SecurityCodeField
+from multiupload.fields import MultiFileField
+
 class LoginForm(forms.Form):
     username = forms.CharField(max_length=100)
     password = forms.CharField(widget=forms.PasswordInput)
@@ -27,9 +29,10 @@ class AddCourseForm(forms.ModelForm):
         fields = ['course_id', 'name', 'membership_access_level']
 
 class AddChapterForm(forms.ModelForm):
+    files = MultiFileField(min_num=1, max_num=5)
     class Meta:
         model = CourseModules
-        fields = ['module_name', 'files']
+        fields = ['module_name', 'content','files']
 
 class AddContentForm(forms.ModelForm):
     class Meta:

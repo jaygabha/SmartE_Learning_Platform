@@ -15,12 +15,6 @@
     <button type="submit">Add Chapter</button>
   </form>
 
-  <h2>Add Content to Module</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ content_form.as_p }}
-    <button type="submit">Add Content</button>
-  </form>
 
   <!-- Display existing chapters and their content -->
   <h2>Modules</h2>
@@ -30,6 +24,14 @@
         <a href="{% url 'SmartE_app:module_detail' course_id=course.course_id module_id=chapter.id %}">
           {{ chapter.module_name }}
         </a>
+        {% if chapter.content %}
+          <p>{{ chapter.content }}</p>
+        {% else %}
+          <p>No content available.</p>
+        {% endif %}
+        {% for file_obj in chapter.filesstorage_set.all %}
+          <a href="{{ file_obj.file.url }}" download>Download File</a>
+        {% endfor %}
       </li>
     {% endfor %}
   </ul>

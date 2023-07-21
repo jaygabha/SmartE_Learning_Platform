@@ -55,14 +55,17 @@ class CourseModules(models.Model):
     module_name = models.CharField(max_length=30)
     course = models.ForeignKey(Courses, on_delete=models.CASCADE)
     content = models.TextField(default='')
-    files = models.FileField(upload_to='course_files/', blank=True, null=True)
+    #files = models.FileField(upload_to='course_files/', blank=True, null=True)
 
     def __str__(self):
         return self.module_name
 
 class FilesStorage(models.Model):
     module = models.ForeignKey(CourseModules, on_delete=models.CASCADE)
-    file = models.FileField(upload_to="module/files")
+    file = models.FileField(upload_to="module/course_files")
+
+    def __str__(self):
+        return f"{self.module.module_name} - {self.file.name}"
 
 
 class ModuleProgressTracker(models.Model):
