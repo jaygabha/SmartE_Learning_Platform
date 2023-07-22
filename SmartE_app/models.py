@@ -20,6 +20,8 @@ class Membership(models.Model):
 class Student(User):
     sid = models.BigIntegerField(primary_key=True, unique=True)
     membership = models.ForeignKey(Membership,  on_delete=models.DO_NOTHING)
+    class Meta:
+        verbose_name="Student"
 
 
 class Transaction(models.Model):
@@ -29,15 +31,19 @@ class Transaction(models.Model):
 
 class Professor(User):
     pid = models.BigIntegerField(primary_key=True, unique=True)
-
+    class Meta:
+        verbose_name = "Professor"
 
 class Admin(User):
     is_staff = True
+    class Meta:
+        verbose_name = "Admin"
 
 
 class Courses(models.Model):
     course_id = models.CharField(primary_key=True, unique=True, max_length=20)
     name = models.CharField(unique=True, max_length=30)
+    description = models.CharField(max_length=300, default='')
     created_date = models.DateTimeField(auto_now_add=True)
     students = models.ManyToManyField(Student, related_name='students_to_course')
     professors = models.ManyToManyField(Professor)

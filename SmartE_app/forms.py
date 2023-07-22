@@ -1,5 +1,5 @@
 from django import forms
-from .models import Membership, Courses, FilesStorage, CourseModules
+from .models import Membership, Courses, FilesStorage, CourseModules, Student
 
 
 class LoginForm(forms.Form):
@@ -7,13 +7,11 @@ class LoginForm(forms.Form):
     password = forms.CharField(widget=forms.PasswordInput)
     user_type = forms.ChoiceField(choices=(('Student', 'Student'), ('Professor', 'Professor')))
 
-class RegistrationForm(forms.Form):
-    sid = forms.CharField(max_length=10)
-    name = forms.CharField(max_length=100)
-    email = forms.EmailField()
-    username = forms.CharField(max_length=100)
-    password = forms.CharField(widget=forms.PasswordInput)
-    membership_type = forms.ModelChoiceField(queryset=Membership.objects.all())
+class RegistrationForm(forms.ModelForm):
+    class Meta:
+        model = Student
+        fields = ["sid", "username", "password", "first_name", "last_name", "email", "membership"]
+
 
 class PaymentForm(forms.Form):
     membership_type = forms.ModelChoiceField(queryset=Membership.objects.all())

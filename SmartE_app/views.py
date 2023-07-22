@@ -21,17 +21,22 @@ def login_view(request):
 
             # Authenticate user
             user = authenticate(request, username=username, password=password)
-
             if user is not None:
-                if user_type == 'Student':
-                    login(request, user)
-                    return redirect('SmartE_app:student_dashboard')  # Redirect to student dashboard
-                elif user_type == 'Professor':
-                    login(request, user)
-                    if user.groups.filter(name='Professor').exists():
-                        return redirect('SmartE_app:course_dashboard')  # Redirect to teacher dashboard
+                try:
+                    if user_type == 'Student':
+                        if Student.objects.get(username=username):
+                            login(request, user)
+                            return redirect('SmartE_app:student_dashboard')  # Redirect to student dashboard
+                    elif user_type == 'Professor':
+                        if Professor.objects.get(username=username):
+                            login(request, user)
+                            return redirect('SmartE_app:course_dashboard')  # Redirect to teacher dashboard
                     else:
                         return render(request, 'SmartE_app/login.html', {'form': form, 'error_message': 'Invalid User'})
+                except Exception:
+                    return render(request, 'SmartE_app/login.html', {'form': form, 'error_message': 'Invalid User'})
+            else:
+                return render(request, 'SmartE_app/login.html', {'form': form, 'error_message': 'Username or password incorrect'})
     else:
         form = LoginForm()
 
@@ -51,18 +56,20 @@ def registration(request):
         form = RegistrationForm(request.POST)
         if form.is_valid():
             sid = form.cleaned_data['sid']
-            name = form.cleaned_data['name']
+            first_name = form.cleaned_data['first_name']
+            last_name = form.cleaned_data['last_name']
             email = form.cleaned_data['email']
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
-            membership_type = form.cleaned_data['membership_type']
-
-            user = User.objects.create_user(username=username, password=password)
-            user.email = email
-            user.first_name = name
-            user.save()
-
-            return redirect('SmartE_app:payment')  # Redirect to a success page
+            membership = form.cleaned_data['membership']
+            try:
+                user1 = Student.objects.get(username=username)
+                return render(request, 'SmartE_app/login.html', {'form': form, 'error_message': 'User Already exists. Please Login'})
+            except Exception:
+                newuser = form.save(commit=False)
+                newuser.set_password(form.cleaned_data['password'])
+                newuser.save()
+                return redirect('SmartE_app:payment')  # Redirect to a success page
     else:
         form = RegistrationForm()
 
