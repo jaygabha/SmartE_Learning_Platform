@@ -1,21 +1,38 @@
 {% extends 'SmartE_app/base.html' %}
 {% load static %}
 {% block content %}
-    <link rel="stylesheet" type="text/css" href="{% static 'SmartE_app/login.css' %}">
-  <h2>Login</h2>
-  {% if error_message %}
-    <p>{{ error_message }}</p>
-  {% endif %}
-  <form method="post">
-    {% csrf_token %}
-    <label for="username">Username:</label>
-    <input type="text" id="username" name="username">
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password"><label for="user_type">Select User Type:</label>
-    <select id="user_type" name="user_type">
-      <option value="Student">Student</option>
-      <option value="Professor">Professor</option>
-    </select>
-    <input type="submit" value="Login">
-  </form>
+    <link rel="stylesheet" href="{% static 'SmartE_app/bootstrap.min.css' %}">
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body bg-secondary-subtle" style="height: 500px;">
+                        <h2 class="card-title text-center mb-4">Login</h2>
+                        {% if error_message %}
+                            <div class="alert alert-danger">{{ error_message }}</div>
+                        {% endif %}
+                        <form method="post" class="bg-white rounded-1 p-4">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="username">Username:</label>
+                                <input type="text" class="form-control" id="username" name="username">
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Password:</label>
+                                <input type="password" class="form-control" id="password" name="password">
+                            </div>
+                            <div class="form-group">
+                                <label for="user_type">Select User Type:</label>
+                                <select class="form-control" id="user_type" name="user_type">
+                                    <option value="Student">Student</option>
+                                    <option value="Professor">Professor</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block mt-3">Login</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

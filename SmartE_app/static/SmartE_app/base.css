@@ -1,38 +1,38 @@
-/* styles.css */
-nav {
-    background-color: #002d60;
-    padding: 10px 20px;
-}
+/*!* styles.css *!*/
+/*nav {*/
+/*    background-color: #002d60;*/
+/*    padding: 10px 20px;*/
+/*}*/
 
-ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-}
+/*ul {*/
+/*    list-style-type: none;*/
+/*    margin: 0;*/
+/*    padding: 0;*/
+/*}*/
 
-li {
-    display: inline-block;
-    margin-right: 20px;
-}
+/*li {*/
+/*    display: inline-block;*/
+/*    margin-right: 20px;*/
+/*}*/
 
-li:last-child {
-    margin-right: 0;
-}
+/*li:last-child {*/
+/*    margin-right: 0;*/
+/*}*/
 
-a {
-    color: #007bff;
-    text-decoration: none;
-    padding: 5px 10px;
-}
+/*a {*/
+/*    color: #007bff;*/
+/*    text-decoration: none;*/
+/*    padding: 5px 10px;*/
+/*}*/
 
-a:hover {
-    background-color: #555;
-    border-radius: 5px;
-}
+/*a:hover {*/
+/*    background-color: #555;*/
+/*    border-radius: 5px;*/
+/*}*/
 
-/* Optional: If you want to add some spacing between the menu and the content */
-.content {
-    margin-top: 20px;
-}
+/*!* Optional: If you want to add some spacing between the menu and the content *!*/
+/*.content {*/
+/*    margin-top: 20px;*/
+/*}*/
 
-/* Add more styles as needed */
+/*!* Add more styles as needed *!*/
