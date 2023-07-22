@@ -5,10 +5,10 @@ from django.http import FileResponse, HttpResponseForbidden
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 
-from .forms import RegistrationForm, PaymentForm, LoginForm, AddCourseForm, AddChapterForm, AddContentForm
+from .forms import RegistrationForm, PaymentForm, LoginForm, AddCourseForm, AddChapterForm, AddContentForm, AddAttendanceForm
 from django.contrib.auth.models import User
 
-from .models import Membership, Student, Courses, Professor, FilesStorage, CourseModules
+from .models import Membership, Student, Courses, Professor, FilesStorage, CourseModules, Attendance
 
 
 def professor_required(view_func):
@@ -234,3 +234,67 @@ def course_list(request):
 def course_detail_student(request, course_id):
     course = CourseModules.objects.filter(course=course_id)
     return render(request, 'SmartE_app/course_detail_student.html', {'course': course, 'course_id': course_id})
+
+
+@login_required
+def attendance(request):
+    if not request.user.is_authenticated:
+        return render(request, 'SmartE_app/attendance.html', {'msg': "User is not authenticated", "Professor": False})
+    # try:
+    if request.user.groups.filter(name='Professor').exists():
+        courses = Courses.objects.filter(professors=request.user).order_by("name")
+        return render(request, 'SmartE_app/attendance.html',{ 'courses': courses, "Professor": True })
+    elif request.user.groups.count() == 0:
+        std = Student.objects.get(username=request.user.username)
+        courses = Courses.objects.filter(students=std).order_by("name")
+        attendance_list = []
+        for course in courses:
+            att = Attendance.objects.get(student=std, course=course)
+            if att:
+                temp = {"percentage": att.attendance_percentage()}
+                temp["course_id"] = course.course_id
+                temp["couse_name"] = course.name
+
+        return render(request, 'SmartE_app/attendance.html',{'attendance_list': attendance_list, "Professor": False })
+    else:
+        return render(request, 'SmartE_app/attendance.html',
+                      {'msg': "User is not a student or professor. For admins Please use Django admin", "Professor": False})
+    # except Exception as e:
+    #     return render(request, 'SmartE_app/attendance.html', {'msg': str(e), "Professor": False})
+
+@professor_required
+def add_attendance(request, course_id):
+    form = AddAttendanceForm()
+    msg = ""
+    try:
+        course = Courses.objects.get(course_id=course_id)
+        if request.user.username not in course.professors.all().values_list('username', flat=True):
+            return render(request, 'SmartE_app/add_attendance.html',{'msg': "Unauthorized to view this course"})
+    except Exception:
+            return render(request, 'SmartE_app/add_attendance.html', {'msg': "Invalid Course ID"})
+    if request.method == "POST":
+        filled_form = AddAttendanceForm(request.POST)
+        if filled_form.is_valid():
+            student = filled_form.cleaned_data["student"]
+            if student.id not in course.students.all().values_list('id', flat=True):
+                msg = "Student Not enrolled in the Course. Please enroll first"
+            else:
+                try:
+                    att = Attendance.objects.get(student=student, course=course)
+                    att.attendance[filled_form.cleaned_data["week"]] = filled_form.cleaned_data["present"]
+                    att.save()
+                except Exception:
+                    attendance = {filled_form.cleaned_data["week"]: filled_form.cleaned_data["present"]}
+                    Attendance.objects.create(student=student, course=course, attendance=attendance)
+        else:
+            return render(request, 'SmartE_app/add_attendance.html', {'msg': "Invalid Form"})
+    att = Attendance.objects.filter(course=course)
+    attendance_list = []
+    for item in att:
+        temp = {"percentage": item.attendance_percentage()}
+        temp["student_username"] = item.student.username
+        temp["student_name"] = item.student.get_full_name()
+        attendance_list.append(temp)
+
+    return render(request, 'SmartE_app/add_attendance.html',
+                      {'form': form, 'course_id': course.course_id, "course_name": course.name, "attendance_list": attendance_list,  "msg": msg})

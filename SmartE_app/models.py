@@ -2,7 +2,6 @@ from django.db import models
 # Create your models here.
 from django.contrib.auth.models import User
 
-
 class Membership(models.Model):
     membership_choices = [
         ('bronze', 'Bronze'),
@@ -44,7 +43,7 @@ class Courses(models.Model):
     name = models.CharField(unique=True, max_length=30)
     created_date = models.DateTimeField(auto_now_add=True)
     students = models.ManyToManyField(Student, related_name='students_to_course')
-    professors = models.ManyToManyField(Professor)
+    professors = models.ManyToManyField(User)
     membership_access_level = models.ForeignKey(Membership,  on_delete=models.DO_NOTHING)
 
     def __str__(self):
@@ -76,9 +75,30 @@ class ModuleProgressTracker(models.Model):
 
 
 class ProgressTracker(models.Model):
-    course = models.ForeignKey(Student, on_delete=models.CASCADE)
+    course = models.ForeignKey(Courses, on_delete=models.CASCADE)
     progress = models.ManyToManyField(ModuleProgressTracker)
-    # For the attendance we can keep a dictionary maintaining week numbers and attendance
-    attendance = models.JSONField(null=True)
     # Same can be done for grades
     grades = models.JSONField(null=True)
+
+class Attendance(models.Model):
+    course = models.ForeignKey(Courses, on_delete=models.CASCADE)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    attendance = models.JSONField(null=True)
+
+    class Meta:
+        unique_together = ('course', 'student')
+
+    def add_attendance(self, week_num: int, attended: bool):
+        if self.attendance:
+            self.attendance[week_num] = attended
+            self.save()
+        else:
+            self.attendance = {week_num: attended}
+    def attendance_percentage(self):
+        count = 0
+        if self.attendance:
+            for k in self.attendance:
+                if self.attendance[k] == "True":
+                    count+=1
+            return int(count/len(self.attendance) * 100)
+        return 0

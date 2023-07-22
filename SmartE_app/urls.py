@@ -18,6 +18,8 @@ urlpatterns = [
     path('course/<str:course_id>/delete/', views.course_delete, name='course_delete'),
     path('courses/', views.course_list, name='course_list'),
     path('courses/<str:course_id>/', views.course_detail_student, name='course_detail_student'),
+    path('attendance', views.attendance, name="attendance"),
+    path('attendance/add/<str:course_id>', views.add_attendance, name="add_attendance"),
     # Other URL patterns...
     # Add other URL patterns as needed
 ]

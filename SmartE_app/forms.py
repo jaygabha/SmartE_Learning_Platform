@@ -1,5 +1,5 @@
 from django import forms
-from .models import Membership, Courses, FilesStorage, CourseModules
+from .models import Membership, Courses, FilesStorage, CourseModules, Attendance, Student
 from creditcards.forms import CardNumberField, CardExpiryField, SecurityCodeField
 from multiupload.fields import MultiFileField
 
@@ -38,3 +38,10 @@ class AddContentForm(forms.ModelForm):
     class Meta:
         model = CourseModules
         fields = ['module_name', 'content']
+
+
+class AddAttendanceForm(forms.Form):
+    student = forms.ModelChoiceField(queryset=Student.objects.all())
+    week = forms.IntegerField(min_value=1)
+    Choices = [(True, True),(False,False)]
+    present = forms.ChoiceField(choices=Choices)

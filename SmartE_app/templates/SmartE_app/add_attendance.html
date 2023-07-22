@@ -1,0 +1,32 @@
+{% extends 'SmartE_app/base.html' %}
+
+{% block content %}
+    <button><a href="{% url 'SmartE_app:attendance' %}">Back to Attendance List</a> </button>
+    {% if msg %}
+        <h4 style="color:red">{{ msg }}</h4>
+    {% endif %}
+    {% if attendance_list %}
+        <h4>{{course_id}}-{{course_name}} Attendance:</h4>
+        <table class="Professor table">
+            <tr class="header">
+                <td>Student Username</td>
+                <td>Student Name</td>
+                <td>Percentage</td>
+            </tr>
+            {% for att in attendance_list %}
+                <tr key={{att.student_id}}>
+                    <td>{{ att.student_username }}</td>
+                    <td>{{att.student_name}}</td>
+                    <td>{{att.percentage}}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <h4>No attendance records exist. Please fill the form below to add attendance</h4>
+    {% endif %}
+    <form action="" method="POST">
+        {% csrf_token %}
+        {{form}}
+        <input type="Submit" value="Record">
+    </form>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends 'SmartE_app/base.html' %}
+
+{% block content %}
+    {% if msg %}
+        <h4 style="color:red">{{ msg }}</h4>
+    {% elif Professor == False %}
+        {% if attendance_list %}
+        <h4>Your Attendance:</h4>
+        <table class="Student table">
+            <tr class="header">
+                <td>Course ID</td>
+                <td>Course Name</td>
+                <td>Percentage</td>
+            </tr>
+            {% for att in attendance_list %}
+                <tr key={{att.course_id}}>
+                    <td>{{ att.course_id }}</td>
+                    <td>{{att.course_name}}</td>
+                    <td>{{att.percentage}}</td>
+                </tr>
+            {% endfor %}
+        </table>
+        {% else %}
+        <h4>No attendance Records found</h4>
+        {% endif %}
+    {% elif Professor == True %}
+        <h4>Your Courses:</h4>
+        {% for course in courses %}
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">{{course.course_id}}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">{{course.name}}</h6>
+                    <a href="attendance/add/{{course.course_id}}" class="card-link">Click Here to view or add attendance</a>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endblock %}
