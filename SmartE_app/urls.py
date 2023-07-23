@@ -21,10 +21,10 @@ urlpatterns = [
     path('attendance', views.attendance, name="attendance"),
     path('attendance/add/<str:course_id>', views.add_attendance, name="add_attendance"),
     path('course/<str:course_id>/create_quiz/', views.create_quiz, name='create_quiz'),
-    path('quiz_detail/<int:course_id>/<int:quiz_id>/', views.quiz_detail, name='quiz_detail'),
-    path('add_question/<int:course_id>/<int:quiz_id>/', views.add_question, name='add_question'),
-    path('question_detail/<int:course_id>/<int:quiz_id>/<int:question_id>/', views.question_detail, name='question_detail'),
-    path('add_answer/<int:course_id>/<int:quiz_id>/<int:question_id>/', views.add_answer, name='add_answer'),
+    path('quiz_detail/<str:course_id>/<int:quiz_id>/', views.quiz_detail, name='quiz_detail'),
+    path('add_question/<str:course_id>/<str:quiz_id>/', views.add_question, name='add_question'),
+    path('question_detail/<str:course_id>/<int:quiz_id>/<int:question_id>/', views.question_detail, name='question_detail'),
+    path('add_answer/<str:course_id>/<int:quiz_id>/<int:question_id>/', views.add_answer, name='add_answer'),
 
     path('course/<str:course_id>/quizzes/', views.course_quiz_list, name='course_quiz_list'),
 

@@ -1,5 +1,17 @@
+{% if msg %}
+<h4 style="color: red">{{msg}}</h4>
+{% else %}
 <form method="POST">
     {% csrf_token %}
     {{ form.as_p }}
+    <input type="text" value="{{mem_type}}" readonly>
+    <input type="int" value="{{price}}" readonly>
+    <select name="currency" id="currency">
+        <option value="volvo">CAD</option>
+        <option value="saab">USD</option>
+        <option value="opel">INR</option>
+        <option value="audi">EUR</option>
+    </select>
     <button type="submit">Pay</button>
 </form>
+{% endif %}

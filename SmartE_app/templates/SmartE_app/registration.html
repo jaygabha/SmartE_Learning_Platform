@@ -1,5 +1,8 @@
 <form method="POST">
     {% csrf_token %}
     {{ form.as_p }}
+    <p> The price of Bronze Membership is 100 CAD</p>
+    <p> The price of Silver Membership is 200 CAD</p>
+    <p> The price of Gold Membership is 300 CAD</p>
     <button type="submit">Register</button>
 </form>

@@ -100,10 +100,16 @@ def registration(request):
 
 
 def payment(request):
+    try:
+        student = Student.objects.get(id=request.user.id)
+        membership = str(student.membership.type).title()
+        price = student.membership.price
+    except Exception:
+        return render(request, 'SmartE_app/payment.html', {'msg': "User not registered. Please register before"})
     if request.method == 'POST':
         form = PaymentForm(request.POST)
         if form.is_valid():
-            membership_type = form.cleaned_data['membership_type']
+            # membership_type = form.cleaned_data['membership_type']
             name = form.cleaned_data['name']
             cardnumber = form.cleaned_data['cardnumber']
             expiry = form.cleaned_data['expiry']
@@ -114,15 +120,13 @@ def payment(request):
             if True:
                 # Process the payment and update the necessary records
                 # ...
-
-                price = Membership.objects.get(type=membership_type).price
-                return render(request, 'SmartE_app/payment_success.html', {'price': price})
+                return render(request, 'SmartE_app/payment_success.html', {'message': "Payment is Successful"})
 
 
     else:
         form = PaymentForm()
 
-    return render(request, 'SmartE_app/payment.html', {'form': form})
+    return render(request, 'SmartE_app/payment.html', {'form': form, 'price': price, "mem_type": membership})
 
 
 @professor_required
