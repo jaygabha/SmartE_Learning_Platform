@@ -1,11 +1,6 @@
-<!-- course_list.html -->
+{% extends 'SmartE_app/base.html' %}
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Course List</title>
-</head>
-<body>
+{% block content %}
     <h1>Course List</h1>
     <ul>
         {% for course in courses %}
@@ -19,5 +14,4 @@
             </li>
         {% endfor %}
     </ul>
-</body>
-</html>
+{% endblock %}
