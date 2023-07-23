@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.files.storage import FileSystemStorage
@@ -58,6 +59,9 @@ def login_view(request):
                         return redirect('SmartE_app:course_dashboard')  # Redirect to teacher dashboard
                     else:
                         return render(request, 'SmartE_app/login.html', {'form': form, 'error_message': 'Invalid User'})
+            else:
+                messages.error(request, 'Invalid Username or Password')
+                return redirect('SmartE_app:login')
     else:
         form = LoginForm()
 
