@@ -8,19 +8,36 @@ class LoginForm(forms.Form):
     user_type = forms.ChoiceField(choices=(('Student', 'Student'), ('Professor', 'Professor')))
 
 class RegistrationForm(forms.Form):
-    sid = forms.CharField(max_length=10)
-    name = forms.CharField(max_length=100)
-    email = forms.EmailField()
-    username = forms.CharField(max_length=100)
-    password = forms.CharField(widget=forms.PasswordInput)
-    membership_type = forms.ModelChoiceField(queryset=Membership.objects.all())
+    sid = forms.CharField(max_length=10,
+                          widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Your Student Id'}))
+    name = forms.CharField(max_length=100,
+                           widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Your Name'}))
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Your Email'}))
+    username = forms.CharField(max_length=100,widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Your Username'}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Your password'}),)
+    membership_type = forms.ModelChoiceField(queryset=Membership.objects.all(),widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Your membership type'}))
 
 class PaymentForm(forms.Form):
-    membership_type = forms.ModelChoiceField(queryset=Membership.objects.all())
-    name = forms.CharField(max_length=100)
-    cardnumber = forms.CharField(max_length=16)
-    expiry = forms.CharField(max_length=5)
-    cvv = forms.CharField(max_length=4)
+    membership_type = forms.ModelChoiceField(
+        queryset=Membership.objects.all(),
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+    name = forms.CharField(
+        max_length=100,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Your Name'})
+    )
+    cardnumber = forms.CharField(
+        max_length=16,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Card Number'})
+    )
+    expiry = forms.CharField(
+        max_length=5,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'MM/YY'})
+    )
+    cvv = forms.CharField(
+        max_length=4,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'CVV'})
+    )
 
 class AddCourseForm(forms.ModelForm):
     class Meta:
