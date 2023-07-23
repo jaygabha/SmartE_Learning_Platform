@@ -67,16 +67,18 @@ class FilesStorage(models.Model):
         return f"{self.module.module_name} - {self.file.name}"
 
 
-class ModuleProgressTracker(models.Model):
-    module = models.ForeignKey(Courses, on_delete=models.CASCADE)
-    student = models.ForeignKey(CourseModules, on_delete=models.CASCADE)
-    completed = models.BooleanField()
-    views = models.PositiveIntegerField(default=0)
+class ModuleProgress(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    module = models.ForeignKey(CourseModules, on_delete=models.CASCADE)
+    viewed = models.BooleanField(default=False)  # True if student viewed the module, False otherwise
+
+    def _str_(self):
+        return f"{self.student} - {self.module}"
 
 
 class ProgressTracker(models.Model):
     course = models.ForeignKey(Courses, on_delete=models.CASCADE)
-    progress = models.ManyToManyField(ModuleProgressTracker)
+    progress = models.ManyToManyField(ModuleProgress)
     # Same can be done for grades
     grades = models.JSONField(null=True)
 

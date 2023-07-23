@@ -8,7 +8,7 @@ from django.urls import reverse
 from .forms import RegistrationForm, PaymentForm, LoginForm, AddCourseForm, AddChapterForm, AddContentForm, AddAttendanceForm
 from django.contrib.auth.models import User
 
-from .models import Membership, Student, Courses, Professor, FilesStorage, CourseModules, Attendance
+from .models import Membership, Student, Courses, Professor, FilesStorage, CourseModules, Attendance, ModuleProgress
 
 
 def professor_required(view_func):
@@ -218,6 +218,19 @@ def module_detail(request, course_id, module_id):
     context = {
         'chapter': chapter,
     }
+
+    student_user = Student.objects.get(username=request.user.username)
+
+    # Try to get the ModuleProgress instance for the student and module
+    try:
+        module_progress = ModuleProgress.objects.get(student=student_user, module=chapter)
+    except ModuleProgress.DoesNotExist:
+        # If the ModuleProgress instance doesn't exist, create a new one
+        module_progress = ModuleProgress(student=student_user, module=chapter, viewed=False)
+
+    # Mark the module as viewed (set the 'viewed' field to True)
+    module_progress.viewed = True
+    module_progress.save()
     return render(request, 'SmartE_app/module_detail.html', context)
 
 
@@ -227,6 +240,24 @@ def course_list(request):
     student_membership = student_user.membership
     membership_type = student_membership.type
     courses = Courses.objects.filter(membership_access_level=membership_type)
+    for course in courses:
+        # Get the modules that belong to this course
+        course_modules = course.coursemodules_set.all()
+
+        # Calculate the total number of modules for this course
+        total_modules = course_modules.count()
+
+        # Calculate the total number of modules viewed by the student for this course
+        total_modules_viewed = ModuleProgress.objects.filter(student=student_user, module__in=course_modules).count()
+
+        # Calculate the percentage of total modules viewed
+        if total_modules > 0:
+            percentage_modules_viewed = (total_modules_viewed / total_modules) * 100
+        else:
+            percentage_modules_viewed = 0
+
+        # Store the percentage in the course object
+        course.percentage_completed = percentage_modules_viewed
     return render(request, 'SmartE_app/course_list.html', {'courses': courses})
 
 
