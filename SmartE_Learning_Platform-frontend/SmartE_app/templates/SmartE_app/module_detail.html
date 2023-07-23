@@ -1,0 +1,25 @@
+{% extends 'SmartE_app/base.html' %}
+
+{% block content %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'SmartE_app/bootstrap.min.css'%}">
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-10">
+            <!-- Apply a custom background color to the h2 element -->
+            <h2 class="bg-info text-white p-2">{{ chapter.module_name }}</h2>
+            {% if chapter.content %}
+                <!-- Apply a custom background color and border color to the p element -->
+                <p class="bg-light border border-primary text-dark p-3">{{ chapter.content }}</p>
+            {% else %}
+                <!-- Apply a custom background color and border color to the p element -->
+                <p class="bg-warning border border-warning text-dark p-3">No content available.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+

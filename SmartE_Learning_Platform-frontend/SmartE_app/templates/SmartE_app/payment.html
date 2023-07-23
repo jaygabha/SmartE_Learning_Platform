@@ -1,0 +1,39 @@
+{% load static %}
+{#<link rel="stylesheet" type="text/css" href="{% static 'SmartE_app/payment.css' %}">#}
+    <!-- payment_form.html -->
+<link rel="stylesheet" href="{% static 'SmartE_app/bootstrap.min.css' %}">
+<div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body shadow-lg p-0 bg-white rounded" style="height: 550px;">
+                        <h2 class="card-title text-center mb-4 bg-primary text-white">Payment</h2>
+                        <form method="post" class="bg-white rounded-5 p-4">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="{{ form.membership_type.id_for_label }}">Membership Type:</label>
+                                {{ form.membership_type }}
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.name.id_for_label }}">Name:</label>
+                                {{ form.name }}
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.cardnumber.id_for_label }}">Card Number:</label>
+                                {{ form.cardnumber }}
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.expiry.id_for_label }}">Expiry:</label>
+                                {{ form.expiry }}
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.cvv.id_for_label }}">CVV:</label>
+                                {{ form.cvv }}
+                            </div>
+                            <button type="submit" class="btn btn-primary mt-2">Pay</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
