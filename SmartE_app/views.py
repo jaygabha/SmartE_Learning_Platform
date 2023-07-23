@@ -10,7 +10,15 @@ from django.contrib.auth.models import User
 
 from .models import Membership, Student, Courses, Professor, FilesStorage, CourseModules, Attendance, ModuleProgress
 
-
+def check_access_level(student_mem, course_mem):
+    types = {
+        "bronze": 1,
+        "silver": 2,
+        "gold": 3,
+    }
+    if types[student_mem]>= types[course_mem]:
+        return True
+    return False
 def professor_required(view_func):
     def _wrapped_view(request, *args, **kwargs):
         if not request.user.is_authenticated or not request.user.groups.filter(name='Professor').exists():
@@ -239,7 +247,16 @@ def course_list(request):
     student_user = Student.objects.get(username=request.user.username)
     student_membership = student_user.membership
     membership_type = student_membership.type
-    courses = Courses.objects.filter(membership_access_level=membership_type)
+    q1 = Courses.objects.filter(membership_access_level__type="bronze")
+    courses = q1
+    if membership_type == "silver":
+        q2 = Courses.objects.filter(membership_access_level__type="silver")
+        courses = q2.union(q1)
+    elif membership_type == "gold":
+        q2 = Courses.objects.filter(membership_access_level__type="silver").union(q1)
+        q3 = Courses.objects.filter(membership_access_level__type="gold")
+        courses = q3.union(q2)
+
     for course in courses:
         # Get the modules that belong to this course
         course_modules = course.coursemodules_set.all()
@@ -277,15 +294,27 @@ def attendance(request):
         return render(request, 'SmartE_app/attendance.html',{ 'courses': courses, "Professor": True })
     elif request.user.groups.count() == 0:
         std = Student.objects.get(username=request.user.username)
-        courses = Courses.objects.filter(students=std).order_by("name")
+        q1 = Courses.objects.filter(membership_access_level__type="bronze")
+        courses = q1
+        if std.membership.type == "silver":
+            q2 = Courses.objects.filter(membership_access_level__type="silver")
+            courses = q2.union(q1)
+        elif std.membership.type == "gold":
+            q2 = Courses.objects.filter(membership_access_level__type="silver").union(q1)
+            q3 = Courses.objects.filter(membership_access_level__type="gold")
+            courses = q3.union(q2)
+
         attendance_list = []
         for course in courses:
-            att = Attendance.objects.get(student=std, course=course)
-            if att:
+            try:
+                att = Attendance.objects.get(student=std, course=course)
                 temp = {"percentage": att.attendance_percentage()}
-                temp["course_id"] = course.course_id
-                temp["couse_name"] = course.name
+                temp["course_id"] = att.course.course_id
+                temp["couse_name"] = att.course.name
                 attendance_list.append(temp)
+            except Exception:
+                pass
+
 
         return render(request, 'SmartE_app/attendance.html',{'attendance_list': attendance_list, "Professor": False })
     else:
@@ -308,8 +337,8 @@ def add_attendance(request, course_id):
         filled_form = AddAttendanceForm(request.POST)
         if filled_form.is_valid():
             student = filled_form.cleaned_data["student"]
-            if student.id not in course.students.all().values_list('id', flat=True):
-                msg = "Student Not enrolled in the Course. Please enroll first"
+            if not check_access_level(student.membership.type, course.membership_access_level.type):
+                msg = "Student not have necessary membership."
             else:
                 try:
                     att = Attendance.objects.get(student=student, course=course)
