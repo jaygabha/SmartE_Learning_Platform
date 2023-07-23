@@ -21,7 +21,7 @@ class RegistrationForm(forms.Form):
 class PaymentForm(forms.Form):
     # membership_type = forms.ModelChoiceField(queryset=Membership.objects.all())
     name = forms.CharField(max_length=100)
-    cardnumber = CardNumberField(label='Card Number')
+    cardnumber = forms.IntegerField(min_value=100000000000, max_value=9999999999999999999)
     expiry = CardExpiryField(label='Expiration Date')
     cvv = SecurityCodeField(label='CVV/CVC')
 class AddCourseForm(forms.ModelForm):
