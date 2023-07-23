@@ -91,17 +91,16 @@ def registration(request):
             user.email = email
             user.first_name = name
             user.save()
-
-            return redirect('SmartE_app:payment')  # Redirect to a success page
+            return redirect('SmartE_app:payment', user.pk)  # Redirect to a success page
     else:
         form = RegistrationForm()
 
     return render(request, 'SmartE_app/registration.html', {'form': form})
 
 
-def payment(request):
+def payment(request, sid):
     try:
-        student = Student.objects.get(id=request.user.id)
+        student = Student.objects.get(pk=sid)
         membership = str(student.membership.type).title()
         price = student.membership.price
     except Exception:
