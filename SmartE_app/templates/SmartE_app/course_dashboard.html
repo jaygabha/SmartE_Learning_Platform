@@ -1,43 +1,31 @@
 {% extends 'SmartE_app/base.html' %}
 
 {% block content %}
-  <h2>Course Dashboard</h2>
+{% load static %}
+<link rel="stylesheet" href="{% static 'SmartE_app/bootstrap.min.css'%}">
 
-  {% for course_info in course_data %}
-    <h3>Course ID: {{ course_info.course.course_id }}</h3>
-    <p>Course Name: {{ course_info.course.name }}</p>
-    <p>Membership Access Level: {{ course_info.course.membership_access_level }}</p>
+{% for course_info in course_data %}
+    <div class="border border-primary rounded p-3 mb-3">
+        <h3 class="mb-4">Course ID: {{ course_info.course.course_id }}</h3>
+        <p>Course Name: {{ course_info.course.name }}</p>
+        <p>Membership Access Level: {{ course_info.course.membership_access_level }}</p>
 
-    <h4>Modules</h4>
-    <ul>
-      {% for module_info in course_info.modules %}
-        <li>
-          <a href="{% url 'SmartE_app:module_detail' course_id=course_info.course.course_id module_id=module_info.module_id %}">
-            {{ module_info.module_name }}
-          </a>
-        </li>
-      {% endfor %}
-    </ul>
+        <h4>Modules</h4>
+        <ul class="list-group">
+            {% for module_info in course_info.modules %}
+                <li class="list-group-item border-top border-primary">
+                    <a href="{% url 'SmartE_app:module_detail' course_id=course_info.course.course_id module_id=module_info.module_id %}">
+                        {{ module_info.module_name }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
 
-    <h4>Quizzes</h4>
-<ul>
-  {% for quiz_info in course_info.quizzes %}
-    <li>
-      <a href="{% url 'SmartE_app:quiz_detail' course_id=course_info.course.course_id quiz_id=quiz_info.quiz_id %}">
-        {{ quiz_info.quiz_name }}
-      </a>
-    </li>
-  {% endfor %}
-</ul>
-
-    <!-- Add the edit, delete, and add quiz buttons for each course -->
-    <a href="{{ course_info.edit_url }}" class="btn btn-primary">Add Chapters and Content</a>
-    <a href="{{ course_info.delete_url }}" class="btn btn-danger">Delete Course</a>
-    <a href="{{ course_info.add_quiz }}" class="btn btn-primary">Add Quiz</a>
-    <hr>
-  {% endfor %}
-
-  <!-- Add the button to redirect to the professor dashboard -->
-  <a href="{% url 'SmartE_app:professor_dashboard' %}" class="btn btn-primary">Go to Professor Dashboard</a>
-
+        <!-- Add the edit and delete buttons for each course -->
+        <a href="{{ course_info.edit_url }}" class="btn btn-primary mt-3">Add Chapters and Content</a>
+        <a href="{{ course_info.delete_url }}" class="btn btn-danger mt-3">Delete Course</a>
+        <a href="{% url 'SmartE_app:add_attendance' course_id=course_info.course.course_id %}" class="btn btn-primary mt-3">Add Attendance</a>
+    </div>
+{% endfor %}
+        <a href="{% url 'SmartE_app:attendance' %}" class="btn btn-primary mt-3">Attendance List</a>
 {% endblock %}

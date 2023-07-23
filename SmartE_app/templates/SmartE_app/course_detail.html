@@ -1,38 +1,45 @@
 {% extends 'SmartE_app/base.html' %}
-
 {% block content %}
-  <h2>Course Details</h2>
-  <p>Course ID: {{ course.course_id }}</p>
-  <p>Name: {{ course.name }}</p>
-  <p>Membership Access Level: {{ course.membership_access_level }}</p>
+{% load static %}
+<link rel="stylesheet" href="{% static 'SmartE_app/bootstrap.min.css'%}">
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Apply a custom background color to the h2 element -->
+            <h2 class="bg-primary text-white p-3 rounded">Course Details</h2>
+            <p><strong>Course ID:</strong> {{ course.course_id }}</p>
+            <p><strong>Name:</strong> {{ course.name }}</p>
+            <p><strong>Membership Access Level:</strong> {{ course.membership_access_level }}</p>
+            <!-- Add other course details as needed -->
 
-  <!-- Add other course details as needed -->
+            <!-- Apply a custom background color to the h2 element -->
+            <h2 class="bg-success text-white p-3 rounded">Add a New Module</h2>
+            <form method="post" enctype="multipart/form-data" class="bg-light p-3 rounded">
+                {% csrf_token %}
+                {{ chapter_form.as_p }}
+                <button type="submit" class="btn btn-primary">Add Chapter</button>
+            </form>
 
-  <h2>Add a New Module</h2>
-  <form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ chapter_form.as_p }}
-    <button type="submit">Add Chapter</button>
-  </form>
+            <!-- Apply a custom background color to the h2 element -->
+            <h2 class="bg-danger text-white p-3 rounded">Add Content to Module</h2>
+            <form method="post" class="bg-light p-3 rounded">
+                {% csrf_token %}
+                {{ content_form.as_p }}
+                <button type="submit" class="btn btn-primary">Add Content</button>
+            </form>
 
-
-  <!-- Display existing chapters and their content -->
-  <h2>Modules</h2>
-  <ul>
-    {% for chapter in course.coursemodules_set.all %}
-      <li>
-        <a href="{% url 'SmartE_app:module_detail' course_id=course.course_id module_id=chapter.id %}">
-          {{ chapter.module_name }}
-        </a>
-        {% if chapter.content %}
-          <p>{{ chapter.content }}</p>
-        {% else %}
-          <p>No content available.</p>
-        {% endif %}
-        {% for file_obj in chapter.filesstorage_set.all %}
-          <a href="{{ file_obj.file.url }}" download>Download File</a>
-        {% endfor %}
-      </li>
-    {% endfor %}
-  </ul>
+            <!-- Display existing chapters and their content -->
+            <h2 class="bg-warning text-white p-3 rounded">Modules</h2>
+            <ul class="list-group">
+                {% for chapter in course.coursemodules_set.all %}
+                    <li class="list-group-item bg-light text-dark rounded">
+                        <a href="{% url 'SmartE_app:module_detail' course_id=course.course_id module_id=chapter.id %}">
+                            {{ chapter.module_name }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
 {% endblock %}

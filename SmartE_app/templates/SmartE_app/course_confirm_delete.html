@@ -1,11 +1,22 @@
+course_confirm_delete.html
+
 {% extends 'SmartE_app/base.html' %}
 
 {% block content %}
-  <h2>Confirm Course Deletion</h2>
-  <p>Are you sure you want to delete the course "{{ course.name }}"?</p>
-  <form method="post">
-    {% csrf_token %}
-    <button type="submit" class="btn btn-danger">Confirm Delete</button>
-    <a href="{% url 'SmartE_app:course_dashboard' %}" class="btn btn-secondary">Cancel</a>
-  </form>
+{% load static %}
+<link rel="stylesheet" href="{% static 'SmartE_app/bootstrap.min.css'%}">
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Apply a custom background color to the h2 element -->
+            <h2 class="bg-danger text-white p-3 rounded">Confirm Course Deletion</h2>
+            <p class="bg-light p-3 rounded">Are you sure you want to delete the course "{{ course.name }}"?</p>
+            <form method="post" class="d-inline-block">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Confirm Delete</button>
+                <a href="{% url 'SmartE_app:course_dashboard' %}" class="btn btn-secondary">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}
