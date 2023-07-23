@@ -15,7 +15,7 @@ class RegistrationForm(forms.Form):
     email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Your Email'}))
     username = forms.CharField(max_length=100,widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Your Username'}))
     password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Your password'}),)
-    membership_type = forms.ModelChoiceField(queryset=Membership.objects.all(),widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Your membership type'}))
+    membership_type = forms.ModelChoiceField(queryset=Membership.objects.all(),widget=forms.Select(attrs={'class': 'form-control', 'placeholder': 'Your membership type'}))
 
 class PaymentForm(forms.Form):
     membership_type = forms.ModelChoiceField(

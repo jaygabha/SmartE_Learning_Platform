@@ -1,13 +1,12 @@
-{% extends 'SmartE_app/base.html' %}
+
 {% load static %}
-{% block content %}
     <link rel="stylesheet" href="{% static 'SmartE_app/bootstrap.min.css' %}">
     <div class="container mt-5">
         <div class="row justify-content-center">
             <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body shadow-lg p-0 bg-white rounded" style="height: 500px;">
-                        <h2 class="card-title text-center mb-4 bg-primary text-white">Login</h2>
+                <div class="card border-0 mt-5">
+                    <div class="card-body shadow-lg p-0 bg-white rounded-5" style="height: 550px;">
+                        <h2 class="card-title text-center mb-3 bg-primary text-white rounded-top-5">Login</h2>
                         {% if error_message %}
                             <div class="alert alert-danger">{{ error_message }}</div>
                         {% endif %}
@@ -35,4 +34,3 @@
             </div>
         </div>
     </div>
-{% endblock %}
