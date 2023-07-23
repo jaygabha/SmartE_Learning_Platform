@@ -285,7 +285,6 @@ def attendance(request):
                 temp = {"percentage": att.attendance_percentage()}
                 temp["course_id"] = course.course_id
                 temp["couse_name"] = course.name
-                attendance_list.append(temp)
 
         return render(request, 'SmartE_app/attendance.html',{'attendance_list': attendance_list, "Professor": False })
     else:
