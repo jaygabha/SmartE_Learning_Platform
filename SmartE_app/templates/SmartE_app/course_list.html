@@ -9,8 +9,14 @@
     <h1>Course List</h1>
     <ul>
         {% for course in courses %}
-            <li><a href="{% url 'SmartE_app:course_detail_student' course_id=course.course_id %}">{{ course.name }}</a></li>
-            - Percentage Completed: {{ course.percentage_completed }}%
+            <li>
+                <a href="{% url 'SmartE_app:course_detail_student' course_id=course.course_id %}">{{ course.name }}</a>
+                - Percentage Completed: {{ course.percentage_completed }}%
+                <!-- Add Quizzes button -->
+                <form method="get" action="{% url 'SmartE_app:course_quiz_list' course_id=course.course_id %}">
+                    <button type="submit">Quizzes</button>
+                </form>
+            </li>
         {% endfor %}
     </ul>
 </body>

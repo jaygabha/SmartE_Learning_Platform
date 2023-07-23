@@ -1,0 +1,14 @@
+{% extends 'SmartE_app/base.html' %}
+
+{% block content %}
+  <h2>{{ course.name }} Quizzes</h2>
+  {% if quizzes %}
+    <ul>
+      {% for quiz in quizzes %}
+        <li><a href="{% url 'SmartE_app:quiz_detail_student' course_id=course.course_id quiz_id=quiz.id %}">{{ quiz.name }}</a></li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No quizzes available for this course.</p>
+  {% endif %}
+{% endblock %}

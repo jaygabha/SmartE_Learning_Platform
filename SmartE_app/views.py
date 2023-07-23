@@ -9,7 +9,9 @@ from django.urls import reverse
 from .forms import RegistrationForm, PaymentForm, LoginForm, AddCourseForm, AddChapterForm, AddContentForm, AddAttendanceForm, QuizForm, QuestionForm, AnswerForm
 from django.contrib.auth.models import User
 
-from .models import Membership, Student, Courses, Professor, FilesStorage, CourseModules, Attendance, ModuleProgress, Quiz, Question
+from .models import Membership, Student, Courses, Professor, FilesStorage, CourseModules, Attendance, ModuleProgress, \
+    Quiz, Question, Answer
+
 
 def check_access_level(student_mem, course_mem):
     types = {
@@ -488,3 +490,52 @@ def add_attendance(request, course_id):
 
     return render(request, 'SmartE_app/add_attendance.html',
                       {'form': form, 'course_id': course.course_id, "course_name": course.name, "attendance_list": attendance_list,  "msg": msg})
+
+
+def quiz_detail_student(request, course_id, quiz_id):
+    quiz = get_object_or_404(Quiz, id=quiz_id)
+    questions = Question.objects.filter(quiz=quiz)
+
+    context = {
+        'quiz': quiz,
+        'questions': questions,
+    }
+
+    return render(request, 'SmartE_app/quiz_detail_student.html', context)
+def course_quiz_list(request, course_id):
+    course = get_object_or_404(Courses, course_id=course_id)
+    quizzes = Quiz.objects.filter(course=course)
+
+    context = {
+        'course': course,
+        'quizzes': quizzes,
+    }
+
+    return render(request, 'SmartE_app/course_quiz_list.html', context)
+
+def submit_quiz(request, course_id, quiz_id):
+    if request.method == 'POST':
+        quiz = get_object_or_404(Quiz, id=quiz_id)
+        questions = Question.objects.filter(quiz=quiz)
+        total_questions = questions.count()
+        correct_answers = 0
+
+        # Process the student's answers
+        for question in questions:
+            answer_id = request.POST.get(f'question_{question.id}')
+            if answer_id:
+                answer = get_object_or_404(Answer, id=answer_id)
+                if answer.is_correct:
+                    correct_answers += 1
+
+        # Calculate the quiz score
+        score = (correct_answers / total_questions) * 100
+
+        context = {
+            'quiz': quiz,
+            'score': score,
+        }
+
+        return render(request, 'SmartE_app/quiz_response.html', context)
+
+    return redirect('SmartE_app:quiz_detail', course_id=course_id, quiz_id=quiz_id)

@@ -25,6 +25,13 @@ urlpatterns = [
     path('add_question/<int:course_id>/<int:quiz_id>/', views.add_question, name='add_question'),
     path('question_detail/<int:course_id>/<int:quiz_id>/<int:question_id>/', views.question_detail, name='question_detail'),
     path('add_answer/<int:course_id>/<int:quiz_id>/<int:question_id>/', views.add_answer, name='add_answer'),
+
+    path('course/<str:course_id>/quizzes/', views.course_quiz_list, name='course_quiz_list'),
+
+    # Add the URL pattern for the quiz_detail view
+    path('course/<str:course_id>/quiz/<int:quiz_id>/', views.quiz_detail_student, name='quiz_detail_student'),
+    path('course/<str:course_id>/quiz/<int:quiz_id>/submit/', views.submit_quiz, name='submit_quiz'),
+
     #path('delete_quiz/<int:course_id>/<int:quiz_id>/', views.delete_quiz, name='delete_quiz'),
     # Other URL patterns...
     # Add other URL patterns as needed

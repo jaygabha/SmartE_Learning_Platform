@@ -1,0 +1,20 @@
+{% extends 'SmartE_app/base.html' %}
+
+{% block content %}
+  <h2>{{ quiz.name }}</h2>
+  <form method="post" action="{% url 'SmartE_app:submit_quiz' course_id=quiz.course.course_id quiz_id=quiz.id %}">
+    {% csrf_token %}
+    {% for question in questions %}
+      <p>{{ question.text }}</p>
+      {% for answer in question.answers.all %}
+        <label>
+          <input type="radio" name="question_{{ question.id }}" value="{{ answer.id }}">
+          {{ answer.text }}
+        </label>
+        <br>
+      {% endfor %}
+      <hr>
+    {% endfor %}
+    <input type="submit" value="Submit">
+  </form>
+{% endblock %}
