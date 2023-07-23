@@ -42,7 +42,7 @@ class Courses(models.Model):
     course_id = models.CharField(primary_key=True, unique=True, max_length=20)
     name = models.CharField(unique=True, max_length=30)
     created_date = models.DateTimeField(auto_now_add=True)
-    students = models.ManyToManyField(Student, related_name='students_to_course')
+    # students = models.ManyToManyField(Student, related_name='students_to_course')
     professors = models.ManyToManyField(User)
     membership_access_level = models.ForeignKey(Membership,  on_delete=models.DO_NOTHING)
 

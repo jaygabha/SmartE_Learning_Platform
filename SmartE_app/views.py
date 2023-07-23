@@ -124,12 +124,13 @@ def professor_dashboard(request):
     if request.method == 'POST':
         form = AddCourseForm(request.POST)
         if form.is_valid():
-            course = form.save(commit=False)
-            course.save()
-            form.save_m2m()  # Save the ManyToManyField relationships (students and professors)
-
+            professors = form.cleaned_data["professors"]
+            for professor in professors:
+                if not professor.groups.filter(name='Professor').exists():
+                    return render(request, 'SmartE_app/professor_dashboard.html', {"msg": "The user selected is not a professor"})
+            form.save()
             # Redirect to a success page or the course detail page
-            return redirect('SmartE_app:course_detail', course_id=course.course_id)
+            return redirect('SmartE_app:course_detail', course_id=form.cleaned_data["course_id"])
     else:
         form = AddCourseForm()
 

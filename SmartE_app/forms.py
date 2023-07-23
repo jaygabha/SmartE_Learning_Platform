@@ -26,7 +26,7 @@ class PaymentForm(forms.Form):
 class AddCourseForm(forms.ModelForm):
     class Meta:
         model = Courses
-        fields = ['course_id', 'name', 'membership_access_level']
+        fields = ['course_id', 'name', 'membership_access_level', 'professors']
 
 class AddChapterForm(forms.ModelForm):
     files = MultiFileField(min_num=1, max_num=5)
