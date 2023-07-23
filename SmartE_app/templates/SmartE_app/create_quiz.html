@@ -1,0 +1,14 @@
+{% extends 'SmartE_app/base.html' %}
+
+{% block content %}
+  <h2>Create Quiz for Course: {{ course.name }}</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    {% comment %} {{ formset.management_form }} {% endcomment %}
+    {% comment %} {% for question_form in formset %}
+        {{ question_form.as_p }} {% endcomment %}
+    {% comment %} {% endfor %} {% endcomment %}
+    <button type="submit">Create</button>
+  </form>
+{% endblock %}

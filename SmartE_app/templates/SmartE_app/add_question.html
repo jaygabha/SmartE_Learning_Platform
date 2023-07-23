@@ -1,0 +1,10 @@
+{% extends 'SmartE_app/base.html' %}
+
+{% block content %}
+  <h2>Add Question for Quiz: {{ quiz.name }}</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Add Question</button>
+  </form>
+{% endblock %}

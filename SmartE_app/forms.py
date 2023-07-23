@@ -1,7 +1,9 @@
 from django import forms
-from .models import Membership, Courses, FilesStorage, CourseModules, Attendance, Student
+from .models import Membership, Courses, FilesStorage, CourseModules, Attendance, Student, Quiz, Question, Answer
 from creditcards.forms import CardNumberField, CardExpiryField, SecurityCodeField
 from multiupload.fields import MultiFileField
+#from django.forms.models import inlineformset_factory
+
 
 class LoginForm(forms.Form):
     username = forms.CharField(max_length=100)
@@ -27,6 +29,22 @@ class AddCourseForm(forms.ModelForm):
     class Meta:
         model = Courses
         fields = ['course_id', 'name', 'membership_access_level', 'professors']
+##Parul
+class QuizForm(forms.ModelForm):
+    class Meta:
+        model = Quiz
+        fields = ['name', 'course']
+    
+class QuestionForm(forms.ModelForm):
+    class Meta:
+        model = Question
+        fields = ['text']
+
+class AnswerForm(forms.ModelForm):
+    class Meta:
+        model = Answer
+        fields = ['text', 'is_correct']
+
 
 class AddChapterForm(forms.ModelForm):
     files = MultiFileField(min_num=1, max_num=5)

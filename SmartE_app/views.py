@@ -5,10 +5,10 @@ from django.http import FileResponse, HttpResponseForbidden
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 
-from .forms import RegistrationForm, PaymentForm, LoginForm, AddCourseForm, AddChapterForm, AddContentForm, AddAttendanceForm
+from .forms import RegistrationForm, PaymentForm, LoginForm, AddCourseForm, AddChapterForm, AddContentForm, AddAttendanceForm, QuizForm, QuestionForm, AnswerForm
 from django.contrib.auth.models import User
 
-from .models import Membership, Student, Courses, Professor, FilesStorage, CourseModules, Attendance, ModuleProgress
+from .models import Membership, Student, Courses, Professor, FilesStorage, CourseModules, Attendance, ModuleProgress, Quiz, Question
 
 def check_access_level(student_mem, course_mem):
     types = {
@@ -138,6 +138,116 @@ def professor_dashboard(request):
         'form': form,
     }
     return render(request, 'SmartE_app/professor_dashboard.html', context)
+##Parul
+# @professor_required
+# def manage_courses(request):
+#     courses = Courses.objects.filter(professors=request.user.professors)
+#     return render(request, 'manage_courses.html', {'courses': courses})
+
+@professor_required
+def create_quiz(request, course_id):
+    course = get_object_or_404(Courses, course_id=course_id)
+    if request.method == 'POST':
+        form = QuizForm(request.POST)
+       # formset = QuestionFormSet(request.POST)
+        if form.is_valid():
+            quiz = form.save(commit=False)
+            quiz.course = course
+            quiz.save()
+
+            # questions = formset.save(commit=False)
+            # for question in questions:
+            #     question.quiz = quiz
+            #     question.save()
+
+            return redirect('SmartE_app:course_dashboard')
+    else:
+        form = QuizForm()
+        #formset = QuestionFormSet()
+
+    context = {
+        'course': course,
+        'form': form,
+        # 'formset': formset
+    }
+    return render(request, 'SmartE_app/create_quiz.html', context)
+
+@professor_required
+def add_question(request, course_id, quiz_id):
+    quiz = get_object_or_404(Quiz, id=quiz_id)
+    if request.method == 'POST':
+        form = QuestionForm(request.POST)
+        if form.is_valid():
+            question = form.save(commit=False)
+            question.quiz = quiz
+            question.save()
+            return redirect('SmartE_app:quiz_detail', course_id=course_id, quiz_id=quiz.id)
+    else:
+        form = QuestionForm()
+    context = {
+        'quiz': quiz,
+        'form': form,
+    }
+    return render(request, 'SmartE_app/add_question.html', context)
+
+@professor_required
+def question_detail(request, course_id, quiz_id, question_id):
+    question = get_object_or_404(Question, id=question_id)
+    answers = question.answers.all()  # Get all answers related to this question
+
+    context = {
+        'course_id': course_id,
+        'quiz_id': quiz_id,
+        'question': question,
+        'answers': answers,
+    }
+    return render(request, 'SmartE_app/question_detail.html', context)
+
+@professor_required
+def add_answer(request, course_id, quiz_id, question_id):
+    question = get_object_or_404(Question, id=question_id)
+    if request.method == 'POST':
+        form = AnswerForm(request.POST)
+        if form.is_valid():
+            answer = form.save(commit=False)
+            answer.question = question
+            answer.save()
+            return redirect('SmartE_app:question_detail', course_id=course_id, quiz_id=quiz_id, question_id=question_id)
+    else:
+        form = AnswerForm()
+    context = {
+        'question': question,
+        'form': form,
+        'course_id': course_id,
+        'quiz_id': quiz_id,
+        'question_id': question_id,
+    }
+    return render(request, 'SmartE_app/add_answer.html', context)
+
+
+def quiz_detail(request, course_id, quiz_id):
+    quiz = get_object_or_404(Quiz, id=quiz_id)
+    questions = quiz.questions.all()  # Get all questions related to this quiz
+
+    context = {
+        'course_id': course_id,  # Ensure this is being passed in
+        'quiz': quiz,
+        'questions': questions,
+    }
+    return render(request, 'SmartE_app/quiz_detail.html', context)
+
+
+# @professor_required
+# def delete_quiz(request, course_id, quiz_id):
+#     quiz = get_object_or_404(Quiz, id=quiz_id)
+#     if request.method == 'POST':
+#         quiz.delete()
+#         return redirect('SmartE_app:course_dashboard')
+#     else:
+#         context = {
+#             'quiz': quiz,
+#         }
+#         return render(request, 'SmartE_app/confirm_delete_quiz.html', context)
 
 
 @professor_required
@@ -178,7 +288,6 @@ def course_detail(request, course_id):
 # views.py
 
 # ...
-
 @professor_required
 def course_dashboard(request):
     courses = Courses.objects.all()
@@ -193,20 +302,35 @@ def course_dashboard(request):
                 'module_id': module.id,
             })
 
-        # Add edit and delete URLs for each course
+        # Query quizzes for the course
+        quizzes = course.quiz_set.all()
+        course_quizzes = []
+        for quiz in quizzes:
+            quiz_detail_url = reverse('SmartE_app:quiz_detail', args=[course.course_id, quiz.id])
+            course_quizzes.append({
+                'quiz_name': quiz.name,
+                'quiz_id': quiz.id,
+                'quiz_url': quiz_detail_url,  # add quiz detail URL
+            })
+
+        # Add edit, delete and create quiz URLs for each course
         course_edit_url = reverse('SmartE_app:course_detail', args=[course.course_id])
         course_delete_url = reverse('SmartE_app:course_delete', args=[course.course_id])
+        course_quiz_url = reverse('SmartE_app:create_quiz', args=[course.course_id])
         course_data.append({
             'course': course,
             'modules': course_modules,
+            'quizzes': course_quizzes,
             'edit_url': course_edit_url,
             'delete_url': course_delete_url,
+            'add_quiz' : course_quiz_url,
         })
 
     context = {
         'course_data': course_data,
     }
     return render(request, 'SmartE_app/course_dashboard.html', context)
+
 
 
 @professor_required

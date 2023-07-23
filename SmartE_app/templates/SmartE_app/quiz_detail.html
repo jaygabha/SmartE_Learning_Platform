@@ -1,0 +1,27 @@
+{% extends 'SmartE_app/base.html' %}
+
+{% block content %}
+  <h2>Quiz: {{ quiz.name }}</h2>
+
+  <h3>Questions:</h3>
+  {% for question in questions %}
+    <div>
+      <h4>Question {{ forloop.counter }}:</h4>
+      <a href="{% url 'SmartE_app:question_detail' course_id quiz.id question.id %}">
+      <p>{{ question.text }}</p>
+      </a>
+    </div>
+  {% empty %}
+    <p>No questions in this quiz.</p>
+  {% endfor %}
+
+  {% comment %} <!-- Add a button to delete the quiz -->
+  <a href="{% url 'SmartE_app:delete_quiz' course_id=course.course_id quiz_id=quiz.id %}" class="btn btn-danger">Delete Quiz</a> {% endcomment %}
+
+  <!-- Add button for adding question -->
+  <!-- Add button for adding question --> 
+  <a href="{% url 'SmartE_app:add_question' course_id quiz.id %}" class="btn btn-primary">Add Question</a>
+
+  <!-- Add a button to go back to the course dashboard -->
+  <a href="{% url 'SmartE_app:course_dashboard' %}" class="btn btn-primary">Back to Course Dashboard</a>
+{% endblock %}
