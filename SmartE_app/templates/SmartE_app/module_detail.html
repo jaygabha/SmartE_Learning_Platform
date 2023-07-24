@@ -18,6 +18,9 @@ module_detail.html
                 <!-- Apply a custom background color and border color to the p element -->
                 <p class="bg-warning border border-warning text-dark p-3">No content available.</p>
             {% endif %}
+        {% for file_obj in chapter.filesstorage_set.all %}
+          <a href="{{ file_obj.file.url }}" download>Download File</a>
+        {% endfor %}
         </div>
     </div>
 </div>

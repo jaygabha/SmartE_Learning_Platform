@@ -20,13 +20,7 @@
                 <button type="submit" class="btn btn-primary">Add Chapter</button>
             </form>
 
-            <!-- Apply a custom background color to the h2 element -->
-            <h2 class="bg-danger text-white p-3 rounded">Add Content to Module</h2>
-            <form method="post" class="bg-light p-3 rounded">
-                {% csrf_token %}
-                {{ content_form.as_p }}
-                <button type="submit" class="btn btn-primary">Add Content</button>
-            </form>
+
 
             <!-- Display existing chapters and their content -->
             <h2 class="bg-warning text-white p-3 rounded">Modules</h2>

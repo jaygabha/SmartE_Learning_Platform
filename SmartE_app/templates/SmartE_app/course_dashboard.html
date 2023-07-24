@@ -14,7 +14,7 @@
         <ul class="list-group">
             {% for module_info in course_info.modules %}
                 <li class="list-group-item border-top border-primary">
-                    <a href="{% url 'SmartE_app:module_detail' course_id=course_info.course.course_id module_id=module_info.module_id %}">
+                    <a href="{% url 'SmartE_app:module_detail_prof' course_id=course_info.course.course_id module_id=module_info.module_id %}">
                         {{ module_info.module_name }}
                     </a>
                 </li>
@@ -28,4 +28,5 @@
     </div>
 {% endfor %}
         <a href="{% url 'SmartE_app:attendance' %}" class="btn btn-primary mt-3">Attendance List</a>
+        <a href="{% url 'SmartE_app:professor_dashboard' %}" class="btn btn-primary">Go to Professor Dashboard</a>
 {% endblock %}

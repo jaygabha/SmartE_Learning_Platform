@@ -354,6 +354,15 @@ def course_delete(request, course_id):
     return render(request, 'SmartE_app/course_confirm_delete.html', context)
 
 
+def module_detail_prof(request, course_id, module_id):
+    chapter = get_object_or_404(CourseModules, id=module_id)
+
+    context = {
+        'chapter': chapter,
+    }
+    return render(request, 'SmartE_app/module_detail.html', context)
+
+
 def module_detail(request, course_id, module_id):
     chapter = get_object_or_404(CourseModules, id=module_id)
 
@@ -374,7 +383,6 @@ def module_detail(request, course_id, module_id):
     module_progress.viewed = True
     module_progress.save()
     return render(request, 'SmartE_app/module_detail.html', context)
-
 
 @student_required
 def course_list(request):
