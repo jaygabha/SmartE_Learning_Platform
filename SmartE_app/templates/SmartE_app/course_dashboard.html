@@ -20,13 +20,25 @@
                 </li>
             {% endfor %}
         </ul>
+        <h4>Quizzes</h4>
+        <ul class="list-group">
+            {% for quiz_info in course_info.quizzes %}
+                <li class="list-group-item border-top border-primary">
+                    <a href="{% url 'SmartE_app:quiz_detail' course_id=course_info.course.course_id quiz_id=quiz_info.quiz_id %}">
+                        {{ quiz_info.quiz_name }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+
 
         <!-- Add the edit and delete buttons for each course -->
         <a href="{{ course_info.edit_url }}" class="btn btn-primary mt-3">Add Chapters and Content</a>
         <a href="{{ course_info.delete_url }}" class="btn btn-danger mt-3">Delete Course</a>
+        <a href="{{ course_info.add_quiz }}" class="btn btn-primary mt-3">Add Quiz</a>
         <a href="{% url 'SmartE_app:add_attendance' course_id=course_info.course.course_id %}" class="btn btn-primary mt-3">Add Attendance</a>
     </div>
 {% endfor %}
         <a href="{% url 'SmartE_app:attendance' %}" class="btn btn-primary mt-3">Attendance List</a>
-        <a href="{% url 'SmartE_app:professor_dashboard' %}" class="btn btn-primary">Add Course</a>
+        <a href="{% url 'SmartE_app:professor_dashboard' %}" class="btn btn-primary mt-3">Add Course</a>
 {% endblock %}
