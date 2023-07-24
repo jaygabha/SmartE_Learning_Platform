@@ -1,4 +1,4 @@
-{% extends 'SmartE_app/base.html' %}
+{% extends 'SmartE_app/base_prof.html' %}
 
 {% block content %}
 {% load static %}
@@ -28,5 +28,5 @@
     </div>
 {% endfor %}
         <a href="{% url 'SmartE_app:attendance' %}" class="btn btn-primary mt-3">Attendance List</a>
-        <a href="{% url 'SmartE_app:professor_dashboard' %}" class="btn btn-primary">Go to Professor Dashboard</a>
+        <a href="{% url 'SmartE_app:professor_dashboard' %}" class="btn btn-primary">Add Course</a>
 {% endblock %}
