@@ -1,14 +1,13 @@
 {% load static %}
 {#<link rel="stylesheet" type="text/css" href="{% static 'SmartE_app/payment.css' %}">#}
     <!-- payment_form.html -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="{% static 'SmartE_app/bootstrap.min.css' %}">
 <div class="container mt-5">
         <div class="row justify-content-center">
             <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body p-0 shadow-lg bg-white rounded" style="height: 550px;">
-                        <h2 class="card-title text-center mb-4 bg-primary text-white">Register</h2>
+                <div class="card border-0 mt-5">
+                    <div class="card-body shadow-lg p-0 bg-white rounded-5" style="height: 550px;">
+                        <h2 class="card-title text-center mb-3 bg-primary text-white rounded-top-5">Register</h2>
                         <form method="post" class="bg-white rounded-5 p-4">
                             {% csrf_token %}
                             <div class="form-group">
@@ -35,7 +34,6 @@
                                 <label for="{{ form.membership_type.id_for_label }}">Membership Type:</label>
                                 {{ form.membership_type }}
                             </div>
-                            <p> The price of Bronze, Silver and Gold is 100, 200 and 300 CAD respectively.</p>
                             <button type="submit" class="btn btn-primary mt-2">Register</button>
                         </form>
                     </div>
@@ -43,12 +41,3 @@
             </div>
         </div>
     </div>
-
-<!--<form method="POST">-->
-<!--    {% csrf_token %}-->
-<!--    {{ form.as_p }}-->
-<!--    <p> The price of Bronze Membership is 100 CAD</p>-->
-<!--    <p> The price of Silver Membership is 200 CAD</p>-->
-<!--    <p> The price of Gold Membership is 300 CAD</p>-->
-<!--    <button type="submit">Register</button>-->
-<!--</form>-->

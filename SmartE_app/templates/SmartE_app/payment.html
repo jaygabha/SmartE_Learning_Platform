@@ -1,7 +1,3 @@
-{% if msg %}
-<h4 style="color: red">{{msg}}</h4>
-{% else %}
-
 {% load static %}
 {#<link rel="stylesheet" type="text/css" href="{% static 'SmartE_app/payment.css' %}">#}
     <!-- payment_form.html -->
@@ -9,11 +5,15 @@
 <div class="container mt-5">
         <div class="row justify-content-center">
             <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body shadow-lg p-0 bg-white rounded" style="height: 550px;">
-                        <h2 class="card-title text-center mb-4 bg-primary text-white">Payment</h2>
+                <div class="card border-0 mt-5">
+                    <div class="card-body shadow-lg p-0 bg-white rounded-5" style="height: 550px;">
+                        <h2 class="card-title text-center mb-3 bg-primary text-white rounded-top-5">Payment</h2>
                         <form method="post" class="bg-white rounded-5 p-4">
                             {% csrf_token %}
+                            <div class="form-group">
+                                <label for="{{ form.membership_type.id_for_label }}">Membership Type:</label>
+                                {{ form.membership_type }}
+                            </div>
                             <div class="form-group">
                                 <label for="{{ form.name.id_for_label }}">Name:</label>
                                 {{ form.name }}
@@ -30,16 +30,6 @@
                                 <label for="{{ form.cvv.id_for_label }}">CVV:</label>
                                 {{ form.cvv }}
                             </div>
-                            <div class="form-group">
-                            <input type="text" value="{{mem_type}}" readonly>
-                            <input type="int" value="{{price}}" readonly>
-                            <select name="currency" id="currency">
-                                <option value="CAD">CAD</option>
-                                <option value="USD">USD</option>
-                                <option value="INR">INR</option>
-                                <option value="EUR">EUR</option>
-                            </select>
-                            </div>
                             <button type="submit" class="btn btn-primary mt-2">Pay</button>
                         </form>
                     </div>
@@ -47,17 +37,3 @@
             </div>
         </div>
     </div>
-<!--<form method="POST">-->
-<!--    {% csrf_token %}-->
-<!--    {{ form.as_p }}-->
-<!--    <input type="text" value="{{mem_type}}" readonly>-->
-<!--    <input type="int" value="{{price}}" readonly>-->
-<!--    <select name="currency" id="currency">-->
-<!--        <option value="CAD">CAD</option>-->
-<!--        <option value="USD">USD</option>-->
-<!--        <option value="INR">INR</option>-->
-<!--        <option value="EUR">EUR</option>-->
-<!--    </select>-->
-<!--    <button type="submit">Pay</button>-->
-<!--</form>-->
-<!--{% endif %}-->
